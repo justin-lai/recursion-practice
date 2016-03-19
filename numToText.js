@@ -21,16 +21,9 @@ var numsAsStrings = {
 
 var numToText = function(str) {
 
-/*
-assign a variable object withs keys of numbers and their elements as the
-stringified version of those numbers
-i.e. 	{1: 'one',
-		 2: 'two',
-		 etc.
-		 }
- */
+  var convertedStr = '';
 
-  function helper(str) {
+  function convertStr(str) {
     //base case if the str is completely iterated
     if (str.length === 0) {
       return
@@ -46,24 +39,11 @@ i.e. 	{1: 'one',
     }
     
     //recursively call helper fn with str minus the first character
-    return helper(str.slice(1))
+    return convertStr(str.slice(1))
   }
 
+  convertStr(str);
 
+  return convertedStr;
 
-/* base case > if str.length = 0
-	return
-
-otherwise
-	check the first character in str > if it matches a key in the obj, replace
-	with the appropriate stringified number and push to results string
-	if not, push string to results string
-
-	recursively call function with str shortened
-
-
-
-
-
-*/
 };
