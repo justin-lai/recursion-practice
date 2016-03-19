@@ -22,8 +22,9 @@ var numsAsStrings = {
 var numToText = function(str) {
 
   var convertedStr = '';
+  convertStr(str,'');
 
-  function convertStr(str) {
+  function convertStr(str, currentNum) {
     //base case if the str is completely iterated
     if (str.length === 0) {
       return
@@ -33,16 +34,25 @@ var numToText = function(str) {
 
     //if the first character is a number, replace it with the stringified version
     if (numsAsStrings.hasOwnProperty(firstChar)) {
-      convertedStr = convertedStr.concat(numsAsStrings[firstChar]);
+      //convertedStr = convertedStr.concat(numsAsStrings[firstChar]);
+
+      //build the number
+      currentNum += firstChar;
     } else {
-      convertedStr = convertedStr.concat(firstChar);
+      //check if a number has finished 'accumulating'
+      if (currentNum !== '') {
+        var fullNumberAsString = 'TEST'
+        //function to assign str to full number
+        convertedStr = convertedStr.concat(fullNumberAsString).concat(firstChar);
+        currentNum = '';
+      } else {
+        convertedStr = convertedStr.concat(firstChar);
+      }
     }
     
     //recursively call helper fn with str minus the first character
-    return convertStr(str.slice(1))
+    return convertStr(str.slice(1),currentNum)
   }
-
-  convertStr(str);
 
   return convertedStr;
 
