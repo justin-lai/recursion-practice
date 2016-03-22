@@ -97,6 +97,10 @@ function fullNumberAsString(number) {
       fullNumberArray = [0],
       digitsPlace = 0,
       tripletGroup = 0;
+  //alerts user if number is greater than this program's capacity/scope
+  if (number.length > 37) {
+    alert("Number exceeds the scope of this program's capacity");
+  }
 
   for (var i=number.length-1; i>=0; i--) {
     //increment digitsPlace
@@ -105,14 +109,7 @@ function fullNumberAsString(number) {
     if (digitsPlace%3 === 1) {
       tripletGroup++;
     }
-    /*separate each digit by a space except the "first" digit
-    if (i !== number.length-1) {
-      fullNumber = ' '+fullNumber;    
-    }
-    
-    //get the stringified digit and add to the full number
-    fullNumber = numsAsStrings[number[i]] + fullNumber;
-    */
+
     fullNumberArray[digitsPlace] = {number: number[i],
                                     group: tripletGroup};
   }
@@ -135,6 +132,7 @@ function fullNumberAsString(number) {
         if (fullNumberArray[digitPlace-1].number !== '0') {
           fullNumber[0]=numsAsStrings[newNumber]+'-'+fullNumber[0];
         } else {
+          fullNumber.unshift(groupQualifier[fullNumberArray[digitPlace].group]);
           fullNumber.unshift(numsAsStrings[newNumber]);
         }
       }
