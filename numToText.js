@@ -26,8 +26,32 @@ var numsAsStrings = {
   '16': 'sixteen',
   '17': 'seventeen',
   '18': 'eighteen',
-  '19': 'nineteen'
+  '19': 'nineteen',
+  '20': 'twenty',
+  '30': 'thirty',
+  '40': 'forty',
+  '50': 'fifty',
+  '60': 'sixty',
+  '70': 'seventy',
+  '80': 'eighty',
+  '90': 'ninety'
 };
+var groupQualifier = {
+  0: '',
+  1: '',
+  2: 'thousand',
+  3: 'million',
+  4: 'billion',
+  5: 'trillion',
+  6: 'quadrillion',
+  7: 'quintillion',
+  8: 'sextillion',
+  9: 'septillion',
+  10: 'octillion',
+  11: 'nonillion',
+  12: 'decillion'
+}
+
 
 var numToText = function(str) {
 
@@ -51,7 +75,7 @@ var numToText = function(str) {
     } else {
       //check if a number has finished 'accumulating'
       if (currentNum !== '') {
-        var fullNumber = fullNumberAsString(currentNum);
+        var fullNumber = fullNumberAsString(currentNum).join(' ');
         //function to assign str to full number
         convertedStr = convertedStr.concat(fullNumber).concat(firstChar);
         currentNum = '';
@@ -69,7 +93,7 @@ var numToText = function(str) {
 };
 
 function fullNumberAsString(number) {
-  var fullNumber = '',
+  var fullNumber = [],
       fullNumberArray = [0],
       digitsPlace = 0,
       tripletGroup = 0;
@@ -97,19 +121,39 @@ function fullNumberAsString(number) {
     //
     if (digitPlace%3 === 0) {
       if (fullNumberArray[digitPlace].number !== '0') {
-        fullNumber = numsAsStrings[fullNumberArray[digitPlace].number]+' hundred '+fullNumber;
+        fullNumber.unshift(numsAsStrings[fullNumberArray[digitPlace].number]+'-hundred');
+        //fullNumber = numsAsStrings[fullNumberArray[digitPlace].number]+' hundred '+fullNumber;
       }
     } else if (digitPlace%3 === 2) { 
-      if digitPlace
-    } else if (digitPlace%3 === 1) {
-      if (digitPlace===1) {
-        fullNumber = numsAsStrings[fullNumberArray[digitPlace].number]+fullNumber; //no space after last digit in number
-      } else {
-        fullNumber = numsAsStrings[fullNumberArray[digitPlace].number]+' '+fullNumber;
+      if (fullNumberArray[digitPlace].number === '1') {
+        var newNumber = fullNumberArray[digitPlace].number+fullNumberArray[digitPlace-1].number;
+        //fullNumber = numsAsStrings[newNumber]+' '+fullNumber;
+        fullNumber[0]=numsAsStrings[newNumber];
+      } else if (fullNumberArray[digitPlace].number !== '0') {
+        var newNumber = fullNumberArray[digitPlace].number+'0'; //i.e. changes '2' to '20', '3' to '30', etc.
+        
+        if (fullNumberArray[digitPlace-1].number !== '0') {
+          fullNumber[0]=numsAsStrings[newNumber]+'-'+fullNumber[0];
+        } else {
+          fullNumber.unshift(numsAsStrings[newNumber]);
+        }
       }
-      
+    } else if (digitPlace%3 === 1) {
+      //checks if ones place is tied to 20, 30, 40, etc.
+      if (fullNumberArray[digitPlace].number !== '0') {
+        fullNumber.unshift(groupQualifier[fullNumberArray[digitPlace].group]);
+        fullNumber.unshift(numsAsStrings[fullNumberArray[digitPlace].number]);
+      } else {
+        //if number is just '0'
+        if (number.length === 1) {
+          fullNumber = ['zero'];
+        }
+      }
     }
 
+  }
+  if (fullNumber[fullNumber.length-1] === '') {
+    fullNumber.pop(); //remove the empty last array element (remnant from unshifting an empty array)
   }
   console.log('fullNumber: '+fullNumber+'-')
   return fullNumber;
